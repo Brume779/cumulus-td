@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.page/schema.json",
   "name": "Cumulus",
-  "description": "TouchDesigner depth-camera people clustering and tracking docs.",
+  "description": "TouchDesigner pointcloud clustering and tracking user documentation",
   "theme": {
     "primary": "#008C95",
     "primaryLight": "#10B8A6"
