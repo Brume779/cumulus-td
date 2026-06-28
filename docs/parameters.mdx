@@ -46,8 +46,6 @@ Recommended camera TOP starting points:
 | Orbbec TOP | Depth Res | `512x512` | Good starting resolution for body tracking and real-time clustering. |
 | Orbbec TOP | Depth FPS | `30` | Stable real-time tracking target. |
 | Orbbec TOP | Depth Align Mode | `Disabled` | Keep the raw depth point cloud unaligned unless you specifically need color/depth alignment upstream. |
-| Orbbec TOP | Fill Mode | `useinput` | Avoids extra TOP resizing behavior before Cumulus processes the point cloud. |
-| Orbbec TOP | Filter Type | `useinput` | Avoids extra filtering/resampling before Cumulus cleanup. |
 
 For networked Orbbec devices, set the Orbbec TOP Device Source to `ipaddress` and enter the device IP. For directly connected devices, start with the device default or auto selection. In the Cumulus source block, make sure Sensor Type matches the TOP type: `Kinect` for Kinect TOPs and `Orbbec` for Orbbec TOPs.
 
@@ -145,6 +143,7 @@ Use this page to choose what the component displays/exports and how optional out
 
 | Label | How to use it |
 | --- | --- |
+| Normalize Distances | Remap XYZ positions to 0-1 range |
 | Bounds Trim % | Percentile trim used for bounds. Raise slightly to ignore outlier points; keep low if bounds should include full body extent. |
 | Oriented Bounds | Enables XZ-plane oriented bounding boxes and `_obbangle`. Turn off for axis-aligned bounds. |
 | Detect Head | Enables head-position computation. Turn off if head channels are not needed or too noisy. |
@@ -161,10 +160,10 @@ Use this page to choose what the component displays/exports and how optional out
 
 | Label | How to use it |
 | --- | --- |
-| Reset Clusters | Pulse to clear cluster state and restart IDs/filters. Use when in need of clearing clusters IDs. |
+| Performance Mode | Disables visual output to increase framerate. Parameters menu should be collapsed for maximum performances as well. |
+| Reset Tracking | Pulse to clear cluster state and restart IDs/filters. Use when in need of clearing clusters IDs. |
 | Unload Plugin | Unloads the native clustering plugin on Windows. Use as a recovery tool when the plugin appears frozen or bugged. |
 | Cook Time | Read-only UI value updated from the clustering cook timing. Use as a quick performance indicator. |
-| Performance Mode | Disables visual output to increase framerate. Parameters menu should be collapsed for maximum performances as well. |
 
 ## Simulator
 
