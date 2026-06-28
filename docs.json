@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.page/schema.json",
-  "name": "CUmulus, real-time pointcloud clustering and body tracking",
+  "name": "Cumulus: real-time pointcloud clustering and body tracking",
   "description": "TouchDesigner depth-camera people clustering component documentation.",
   "theme": {
     "primary": "#00A6A6",
