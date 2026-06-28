@@ -1,0 +1,48 @@
+{
+  "$schema": "https://docs.page/schema.json",
+  "name": "Cumulus",
+  "description": "TouchDesigner depth-camera people clustering component documentation.",
+  "theme": {
+    "primary": "#00A6A6",
+    "primaryLight": "#007C89"
+  },
+  "content": {
+    "showPageTitle": true,
+    "showPageImage": true
+  },
+  "header": {
+    "showGitHubCard": false,
+    "links": []
+  },
+  "social": {},
+  "og": {
+    "github": false
+  },
+  "sidebar": [
+    {
+      "group": "User Guide",
+      "pages": [
+        {
+          "title": "Overview",
+          "href": "/",
+          "icon": "book"
+        },
+        {
+          "title": "Outputs",
+          "href": "/outputs",
+          "icon": "diagram-project"
+        },
+        {
+          "title": "Parameters",
+          "href": "/parameters",
+          "icon": "sliders"
+        },
+        {
+          "title": "Tuning",
+          "href": "/tuning",
+          "icon": "gauge-high"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+---
+title: Practical Tuning Notes
+description: Recommended tuning order and fixes for common source, clustering, tracking, and filtering problems.
+---
+
+Tune in this order: sources, scene crop, masks, point-cloud cleanup, clustering, cluster ID stability, then smoothing. Filtering should be the last step. It can remove visible jitter, but it will not fix bad source alignment or unstable clustering.
+
+## Source And Mask Setup
+
+If clusters appear in the wrong place, fix source Translation, Rotation, Scale, and Pivot before touching clustering controls. Your scene and global sources transform should reflect your physical world. Multiple cameras should agree on the same floor, wall, and body positions before their clouds are merged.
+
+If extra background objects become clusters, first make sure Max Bounds correctly describes the global room/tracking volume size from `0, 0, 0`, then use the first local mask as a slightly smaller include box, usually about 10-30 cm inside the global scene box where wall, floor, or foot noise appears. Add more local mask blocks for furniture or other fixed geometry inside that volume. Use View Outside during setup to confirm whether unwanted points are outside the global scene box or still inside the active volume.
+
+If one camera is noisy or offset, disable that source with Active and tune with a single source first. Re-enable sources one at a time so you can see which camera creates the problem.
+
+If the point cloud is too dense or expensive, increase Binning or lower Thinning. If people become sparse or lose limbs, lower Binning or raise Thinning before lowering Min Points.
+
+## Clustering
+
+If people merge into one cluster, lower Cell Size, lower Vertical Scale, raise Min Cell Points slightly, tighten masks, or reduce the scene box if it is too large. Lower Cell Size also improves cluster precision and bounding-box detail when the point cloud is clean enough.
+
+If one person fragments into multiple clusters, raise Cell Size, lower Min Cell Points or lower Min Points. Fragmentation usually means the point cloud has gaps, the voxel size is too small, or cleanup is removing valid body points. Raising Cell Size trades precision for a more stable, less detailed cluster and bounding box.
+
+If small objects become clusters, raise Min Points and Min Size. If large wall/floor blobs survive, lower Max Size and tighten the scene crop.
+
+If clusters disappear at distance, lower Min Points and Min Cell Points carefully. Distant people usually have fewer valid points, so high thresholds can reject them before ID assignment.
+
+If vertical body sections split apart, lower Vertical Scale. If stacked or vertical structures merge too easily, raise Vertical Scale.
+
+## Cluster ID Stability
+
+If cluster IDs swap, lower Match Radius, lower Max Velocity, increase Validation Time, or improve source alignment. ID swaps usually happen when centroids cross, jump, or are too noisy for the matching radius.
+
+If clusters vanish during short occlusions, raise Hold Time. If ghost clusters linger too long after people leave, lower Hold Time.
+
+If false clusters get IDs too quickly, raise Validation Time. If real people feel delayed before appearing, lower Validation Time.
+
+If fast movement causes IDs to drop, raise Match Radius or Max Velocity. If clusters jump across the room to the wrong person, lower Match Radius or Max Velocity.
+
+Use Reset Clusters after major changes to clustering, ID, or source parameters so old state does not affect what you are evaluating.
+
+## 1 Euro Filtering Tuning
+
+The 1 Euro filters use two main controls per output family:
+
+| Control Type | How to tune it |
+| --- | --- |
+| Min Cutoff | Baseline smoothing. Lower values are smoother but add more lag. Higher values are more responsive but show more jitter. |
+| Speed Coeff | Motion response. Higher values let fast movement pass through with less lag while still smoothing slow jitter. Lower values keep smoothing more constant. |
+
+Start with only Filter Position enabled. Tune Position Min Cutoff until a standing person looks stable, then raise Position Speed Coeff until walking movement feels responsive. A good tuning process is: lower Min Cutoff until jitter is acceptable, then raise Speed Coeff until motion lag is acceptable.
+
+Tune Filter Bounds separately from position. Bounds often jitter more than centroids, so Bounds Min Cutoff can usually be lower than Position Min Cutoff. If bounding boxes lag behind moving people, raise Bounds Speed Coeff.
+
+Tune Filter Head last. Head points are often sparse and noisy, so head smoothing may need stronger filtering than centroid smoothing. If the head marker floats or jumps, lower Head Min Cutoff or lower Head Region %. If the head marker lags behind fast motion, raise Head Speed Coeff.
+
+Use Filter Velocity only if downstream logic needs a smoother velocity signal. Velocity is naturally more sensitive to noise than position, so aggressive velocity smoothing can make motion triggers feel late.
+
+If output is smooth but wrong, turn filtering off and fix clustering first. Filtering should polish stable clusters, not hide split, merged, or misaligned clusters.

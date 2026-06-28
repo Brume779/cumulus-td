@@ -1,0 +1,87 @@
+---
+title: Outputs
+description: Connector outputs, slot state values, raw CHOP channels, and public info diagnostics.
+---
+
+## Slot Conventions
+
+Clusters are emitted as fixed slots. Empty slots stay present and use `_id = -1` and `_state = -1`.
+
+State values:
+
+| Value | Meaning |
+| --- | --- |
+| `-1` | Empty slot |
+| `1` | Active confirmed cluster |
+| `2` | Ghost-held cluster during hold time |
+
+## Component Outputs
+
+Cumulus exposes these connector outputs from the `.tox` component. Use them directly from the component in your TouchDesigner project.
+
+| Output | Family | Meaning |
+| --- | --- | --- |
+| `raw_table` | DAT | Table version of the raw cluster channels. |
+| `raw` | CHOP | Full per-slot Clustering output, including IDs, states, centroid, velocity, head, bounds, and OBB angle. |
+| `centroid` | CHOP | Per-cluster centroid channels selected from `raw`. |
+| `bbox` | CHOP | Bounding-box values prepared for downstream display/instancing. |
+| `velocity` | CHOP | Per-cluster velocity channels selected from `raw`. |
+| `orientation` | CHOP | Orientation/vector helper output derived from velocity. |
+| `point_cloud` | POP | Prepared point-cloud visualization output. Points include `source` and `id` attributes. |
+| `info` | CHOP | Cluster/plugin diagnostics for status, cook time, counts, and cluster metrics. |
+
+## Point Cloud POP Attributes
+
+The `point_cloud` POP preserves the prepared points used for visualization and downstream spatial effects. Each point includes these attributes:
+
+| Attribute | Meaning |
+| --- | --- |
+| `source` | Camera/source index that produced the point. Use this to separate or color points by source camera. |
+| `id` | Cluster ID the point belongs to. Use this to associate points with the matching cluster slot/output ID. |
+
+## Raw CHOP Channels
+
+`raw` has `Slots * 21` channels and one sample. Channels are named `cluster{N}_{suffix}`, where `N` starts at `0`.
+
+| Suffix | Meaning |
+| --- | --- |
+| `_id` | Stable zero-based public cluster ID; `-1` when empty. |
+| `_state` | `-1` empty, `1` active, `2` ghost. |
+| `_enter` | One-frame pulse when a cluster becomes confirmed or a ghost is reacquired. |
+| `_exit` | One-frame pulse when an occupied slot becomes empty. |
+| `_age` | Seconds since the cluster was first detected. |
+| `_cx`, `_cy`, `_cz` | Cluster centroid position. |
+| `_vx`, `_vy`, `_vz` | Cluster velocity. |
+| `_hx`, `_hy`, `_hz` | Computed head position. |
+| `_minx`, `_miny`, `_minz` | Bounding box minimum. |
+| `_maxx`, `_maxy`, `_maxz` | Bounding box maximum. |
+| `_obbangle` | XZ-plane oriented bounding-box angle in degrees. `0` when OBB is off. |
+
+## Public Info Output Channels
+
+The public `info` output exposes the main runtime diagnostics:
+
+| Channel | Meaning |
+| --- | --- |
+| `status` | Cluster status code. |
+| `clustering_cook_time` | Clustering cook time, renamed from TouchDesigner's `cook_time` info channel. |
+| `point_count` | Input point count. |
+| `raw_clusters` | Aggregated clusters before post filters. |
+| `valid_clusters` | Valid candidates after filters and candidate cap. |
+| `active_clusters` | Confirmed active clusters. |
+| `ghost_clusters` | Ghost-held clusters. |
+| `pending_clusters` | Unconfirmed pending clusters. |
+| `clusters_dropped_by_slot_cap` | Valid clusters dropped because the candidate cap was reached. |
+
+Status codes:
+
+| Code | Meaning |
+| --- | --- |
+| `0` | Success |
+| `1` | Idle/reset |
+| `-1` | Missing input |
+| `-2` | Too few channels |
+| `-3` | Empty input |
+| `-4` | Null channel data |
+| `-5` | Unsafe coordinate |
+| `-6` | Invalid parameters |

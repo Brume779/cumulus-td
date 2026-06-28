@@ -1,0 +1,44 @@
+---
+title: Depth Camera Clustering User Guide
+description: Cumulus turns one or more depth-camera point clouds into stable people clusters with persistent IDs.
+---
+
+This guide describes `Cumulus`, a TouchDesigner `.tox` component for turning one or more depth-camera point clouds into stable, person-sized clusters with persistent cluster IDs.
+
+## General Purpose
+
+Cumulus is meant for interactive installations, stage systems, spatial interfaces, and other TouchDesigner projects that need reliable real-time people positions from depth cameras. It combines source setup, camera alignment, scene cropping, masking, point-cloud cleanup, clustering, ID persistence, smoothing, simulation, and reusable presets in one component.
+
+The component outputs cluster centroids, bounds, velocity, orientation helpers, optional head positions, a prepared point-cloud view with per-point source and cluster ID attributes, and diagnostic info channels. Downstream networks can use these outputs for visuals, interaction zones, motion logic, analytics, or debugging.
+
+## Main Features
+
+| Feature | What it provides |
+| --- | --- |
+| Multi-source depth input | Use several Kinect or Orbbec-style point-cloud sources and align them into one shared space. |
+| Per-source calibration controls | Adjust translation, rotation, scale, pivot, color, active state, binning, and time delay per source. |
+| Global scene controls | Crop the overall capture volume and switch between setup/calibration views. |
+| Mask volumes | Add repeated include/exclude mask blocks for precise cleanup after the broad scene crop. |
+| Point-cloud cleanup | Reduce density and remove local noise before clustering. |
+| Real-time clustering | Convert raw XYZ points into person-sized cluster slots with centroid, velocity, bounds, head, and OBB data. |
+| Persistent cluster IDs | Keep cluster IDs stable through motion, short occlusions, validation delays, and ghost hold time. |
+| 1 Euro smoothing | Smooth centroid, bounds, velocity, and head outputs with separate response controls. |
+| Simulator | Test behavior without live depth cameras using synthetic moving bodies. |
+| Presets | Save and load reusable component settings as JSON files. |
+| Diagnostics | Monitor status, cook time, point counts, cluster counts, and dropped-cluster metrics. |
+
+## Basic Workflow
+
+1. Add one or more depth point-cloud sources on the `Sources` page. Kinect and Orbbec sources are currently supported.
+2. Align sources with per-source transform controls and the global transform.
+3. Set the scene size and masks so only the capture volume remains.
+4. Tune point-cloud cleanup, clustering, and cluster ID assignment until one person creates one stable slot.
+5. Save settings from the `Presets` page.
+
+## Guide Pages
+
+| Page | Use it for |
+| --- | --- |
+| [Outputs](/outputs) | Slot conventions, connector outputs, raw channels, info channels, and status codes. |
+| [Parameters](/parameters) | Every wrapper parameter page and control exposed by Cumulus. |
+| [Tuning](/tuning) | Practical setup, clustering, ID stability, and 1 Euro filtering guidance. |

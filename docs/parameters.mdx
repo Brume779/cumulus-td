@@ -1,0 +1,197 @@
+---
+title: Parameters
+description: Reference for the Cumulus wrapper pages and controls.
+---
+
+## Sources
+
+Use this page to add, enable, align, and color depth-camera point-cloud sources.
+
+Source Count controls how many source blocks appear. The global controls apply to every source. The source-block controls repeat once for each source block.
+
+Global source controls:
+
+| Label | How to use it |
+| --- | --- |
+| Source Count | Number of source blocks. Increase this to add another camera/source block. |
+| Unique Color | When on, sources will have a unique color. |
+| Global Translation | Adds a final XYZ translation to all sources together. Use after individual source alignment. |
+| Global Rotation | Adds a final XYZ rotation to all sources together. |
+| Lock Cameras | Locks camera/source transform interaction so accidental UI changes do not move aligned cameras. |
+
+Source block controls:
+
+| Label | How to use it |
+| --- | --- |
+| Point Cloud TOP | TOP source path for this source block. Point this at a depth camera point-cloud TOP. |
+| Sensor Type | Source type for this block. `Kinect` and `Orbbec` are supported. |
+| Active | Enables or disables this source without deleting its settings. |
+| Binning | Reduces this source's resolution before downstream processing. Options are `none`, `8x8`, `4x4`, and `2x2`. Higher binning reduces point count and detail. |
+| Select | Selects this source for UI interaction/gizmo editing. |
+| Translation | XYZ position of this source in world space. |
+| Rotation | XYZ rotation of this source in degrees. |
+| Scale | XYZ scale for this source. Usually leave at `1,1,1` unless the incoming source needs correction. |
+| Pivot | Pivot offset used by this source transform. Useful when rotating around a calibrated camera origin. |
+| Color | Set color for this source. Useful when aligning multiple cameras. |
+| Time Delay | Time delay for this source. Use only when sources need temporal alignment. |
+
+Recommended camera TOP starting points:
+
+| Camera TOP | Parameter | Recommended value | Notes |
+| --- | --- | --- | --- |
+| Kinect TOP | Image | `depthpointcloud` | Use the depth-space XYZ point cloud as the source. |
+| Kinect TOP | Camera Res | `640x480` | Matches the depth point-cloud resolution used by the sample project. |
+| Kinect TOP | Unknown Point Value | `-inf` / `neginfinite` | Keeps invalid depth points clearly invalid before cleanup. In TouchDesigner this may appear as `Negative Infinite` or the `neginfinite` menu value. |
+| Orbbec TOP | Image | `pointcloud` | Use the Orbbec point-cloud image output. |
+| Orbbec TOP | Depth Res | `512x512` | Good starting resolution for body tracking and real-time clustering. |
+| Orbbec TOP | Depth FPS | `30` | Stable real-time tracking target. |
+| Orbbec TOP | Depth Align Mode | `Disabled` | Keep the raw depth point cloud unaligned unless you specifically need color/depth alignment upstream. |
+| Orbbec TOP | Fill Mode | `useinput` | Avoids extra TOP resizing behavior before Cumulus processes the point cloud. |
+| Orbbec TOP | Filter Type | `useinput` | Avoids extra filtering/resampling before Cumulus cleanup. |
+
+For networked Orbbec devices, set the Orbbec TOP Device Source to `ipaddress` and enter the device IP. For directly connected devices, start with the device default or auto selection. In the Cumulus source block, make sure Sensor Type matches the TOP type: `Kinect` for Kinect TOPs and `Orbbec` for Orbbec TOPs.
+
+## Scene
+
+Use this page for the broad scene crop before detailed masks and clustering. The global scene starts at `0, 0, 0`; the scene size defines the opposite corner in meters.
+
+| Label | How to use it |
+| --- | --- |
+| Max Bounds | XYZ size of the global scene box in meters, usually the room or tracking volume. Walls or other fixed geometry can remain inside this broad scene box and be removed later with local masks. |
+| View Outside | Shows points outside the scene crop for setup/debugging. |
+| Camera Calibration View | Hides cluster output visuals so the source clouds are easier to see while calibrating cameras. |
+
+## Point Cloud
+
+Use this page to reduce point count and remove local noise before clustering.
+
+| Label | How to use it |
+| --- | --- |
+| Thinning | Downsamples the point cloud. Lower thinning to reduce load and noise; increase it when clustering needs more detail. |
+| Noise Reduction | Neighbor radius used by the cleanup pass. Lower values remove more sparse or isolated points; higher values preserve more sparse body points but may keep more noise. |
+| Invert | Shows the points removed by Noise Reduction, making it easier to inspect what the cleanup pass is discarding. |
+
+## Masking
+
+Use masks for precise include/exclude volumes after the broad scene crop.
+
+There is always at least one mask. The first mask should usually be an include box that is slightly smaller than the global scene box, about 10-30 cm inset on the edges that need cleanup. This removes noisy wall, floor, and foot-level points while keeping the broad scene size aligned to the room.
+
+Mask Count controls how many mask blocks appear. The mask block controls repeat once for each mask volume.
+
+| Label | How to use it |
+| --- | --- |
+| Mask Count | Number of mask blocks. Increase to add another mask volume. |
+
+Mask block controls:
+
+| Label | How to use it |
+| --- | --- |
+| Enabled | Enables this mask block. |
+| Bounding Type | Shape/type of bound used by this mask block. Box bounds are the common default. |
+| Combine | How this mask combines with previous masks. |
+| Translate | XYZ position of this mask. |
+| Rotate | XYZ rotation of this mask in degrees. |
+| Scale | XYZ size/scale of this mask. |
+| Invert | Inverts this mask, turning an include region into an exclude region or vice versa. |
+
+## Clustering
+
+Use this page to tune how raw points become clusters.
+
+| Label | How to use it |
+| --- | --- |
+| Cluster Slots | Number of output cluster slots. Set this to the maximum number of people you want downstream outputs to reserve. |
+| Cell Size | Voxel side length in meters. Smaller values give more precise clustering and tighter bounding boxes, and can split close people more easily, but may fragment bodies or amplify noise. Larger values are more stable but produce coarser bounds and can merge nearby people. |
+| Min Cell Points | Minimum points required for a voxel cell to participate. Raise it to reject speckle noise; lower it if bodies fragment. |
+| Vertical Scale | Changes vertical cell indexing. Lower values can reduce vertical fragmentation; higher values can separate vertical structure more strongly. |
+| Min Points | Minimum total points required for a cluster. Raise to reject small objects; lower if distant/sparse people are missed. |
+| Min Size | Minimum accepted cluster size per axis. Raise to reject small objects. |
+| Max Size | Maximum accepted cluster size per axis. Lower to reject walls/large merged blobs; raise for large groups or wide capture volumes. |
+
+## Tracking
+
+Use this page to tune cluster ID stability over time.
+
+| Label | How to use it |
+| --- | --- |
+| Hold Time | How long a lost confirmed cluster remains as a ghost. Higher values bridge short occlusions; lower values clear stale clusters faster. |
+| Validation Time | Time a new cluster must persist before it receives a confirmed ID. Higher values reduce false enters; lower values react faster. |
+| Match Radius | Maximum centroid distance for matching a current cluster to an existing cluster ID. Raise for fast motion or noisy centroids; lower to reduce ID swaps. |
+| Max Velocity | Velocity clamp in meters/second. Use `0` to disable the clamp. Lower values reject impossible jumps but can hurt fast movement. |
+
+## Filtering
+
+Use this page for 1 Euro smoothing. Tune clustering first; smoothing should polish stable clusters, not hide bad segmentation.
+
+| Label | How to use it |
+| --- | --- |
+| Filter Position | Enables centroid smoothing. |
+| Position Min Cutoff | Base cutoff for centroid smoothing. Higher is more responsive; lower is smoother. |
+| Position Speed Coeff | Speed response for centroid smoothing. Higher lets fast motion pass with less lag. |
+| Filter Bounds | Enables bounds/OBB smoothing. |
+| Bounds Min Cutoff | Base cutoff for bounds smoothing. |
+| Bounds Speed Coeff | Speed response for bounds smoothing. |
+| Filter Velocity | Enables velocity smoothing. |
+| Velocity Min Cutoff | Base cutoff for velocity smoothing. |
+| Velocity Speed Coeff | Speed response for velocity smoothing. |
+| Filter Head | Enables head-position smoothing. |
+| Head Min Cutoff | Base cutoff for head smoothing. |
+| Head Speed Coeff | Speed response for head smoothing. |
+
+## Output
+
+Use this page to choose what the component displays/exports and how optional output fields are computed.
+
+| Label | How to use it |
+| --- | --- |
+| Bounds Trim % | Percentile trim used for bounds. Raise slightly to ignore outlier points; keep low if bounds should include full body extent. |
+| Oriented Bounds | Enables XZ-plane oriented bounding boxes and `_obbangle`. Turn off for axis-aligned bounds. |
+| Detect Head | Enables head-position computation. Turn off if head channels are not needed or too noisy. |
+| Head Region % | Top percentage of points used to compute head position. Lower focuses on the very top; higher averages more of the upper body. |
+| Head Lift | Vertical offset subtracted from the computed head Y. Use to place the head marker below the absolute top points. |
+
+## Camera
+
+| Label | How to use it |
+| --- | --- |
+| Orthographic | Switches the component viewer camera to orthographic projection. Useful for top/plan-style setup views. |
+
+## Setup
+
+| Label | How to use it |
+| --- | --- |
+| Reset Clusters | Pulse to clear cluster state and restart IDs/filters. Use when in need of clearing clusters IDs. |
+| Unload Plugin | Unloads the native clustering plugin on Windows. Use as a recovery tool when the plugin appears frozen or bugged. |
+| Cook Time | Read-only UI value updated from the clustering cook timing. Use as a quick performance indicator. |
+| Performance Mode | Disables visual output to increase framerate. Parameters menu should be collapsed for maximum performances as well. |
+
+## Simulator
+
+Use this page to test the component without live depth cameras.
+
+| Label | How to use it |
+| --- | --- |
+| Enabled | Enables synthetic point-cloud simulation. Turn off for live camera operation. |
+| Mode | Simulation behavior mode. |
+| Number of Simulations | Number of simulated bodies. |
+| Speed | Motion speed of simulated bodies. |
+| Allow Outside | Allows simulated bodies to move outside the normal scene box. Useful for stress-testing enters/exits. |
+
+## Presets
+
+Use this page to save and load user parameter sets.
+
+| Label | How to use it |
+| --- | --- |
+| Load | Pulse to load the file chosen in Load File. |
+| Save | Pulse to save the current custom parameter state to Save File. |
+| Load File | Config file path to load. Relative paths resolve beside the saved host TouchDesigner project; paths without `.json` get the extension automatically. |
+| Save File | Config file path to save. Relative paths resolve beside the saved host TouchDesigner project; paths without `.json` get the extension automatically. |
+
+## About
+
+| Label | How to use it |
+| --- | --- |
+| Version | Component/version display field. Informational. |
+| Copyright | Component copyright/info field. Informational. |
