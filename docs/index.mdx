@@ -1,17 +1,31 @@
 ---
-title: Cumulus User Guide
-description: Cumulus turns one or more depth-camera point clouds into stable people clusters with persistent IDs.
+title: Cumulus
+description: Real-time people clustering for TouchDesigner depth-camera point clouds.
 ---
 
-This guide describes `Cumulus`, a TouchDesigner `.tox` component for turning one or more depth-camera point clouds into stable, person-sized clusters with persistent cluster IDs.
+Cumulus turns one or more depth-camera point clouds into stable, person-sized clusters with persistent IDs. It is built for TouchDesigner installations that need reliable body positions, bounds, velocities, and diagnostics from live depth cameras.
 
-## General Purpose
+## At A Glance
 
-Cumulus is meant for interactive installations, stage systems, spatial interfaces, and other TouchDesigner projects that need reliable real-time people positions from depth cameras. It combines source setup, camera alignment, scene cropping, masking, point-cloud cleanup, clustering, ID persistence, smoothing, simulation, and reusable presets in one component.
+| Area | What Cumulus handles |
+| --- | --- |
+| Inputs | Kinect or Orbbec-style point-cloud TOPs, combined into one tracking volume. |
+| Setup | Per-source alignment, global transforms, scene crop, masks, and calibration views. |
+| Tracking | Real-time clustering, persistent IDs, ghost hold, validation delay, and velocity estimates. |
+| Outputs | Raw slot data, centroids, bounds, velocity, orientation helpers, point-cloud attributes, and info channels. |
+| Workflow | Live-camera setup, simulator testing, parameter tuning, and reusable JSON presets. |
 
-The component outputs cluster centroids, bounds, velocity, orientation helpers, optional head positions, a prepared point-cloud view with per-point source and cluster ID attributes, and diagnostic info channels. Downstream networks can use these outputs for visuals, interaction zones, motion logic, analytics, or debugging.
+## Quick Start
 
-## Main Features
+1. Add a source on the `Sources` page and point it at a depth-camera point-cloud TOP.
+2. Align source transforms until the cloud matches the physical room.
+3. Set `Scene` bounds, then add masks to remove walls, floor noise, or fixed objects.
+4. Tune `Point Cloud` cleanup before changing clustering thresholds.
+5. Tune `Clustering` until one person creates one clean cluster.
+6. Tune `Tracking` for stable IDs, then enable filtering only after clustering is reliable.
+7. Save the finished setup from `Presets`.
+
+## Main Capabilities
 
 | Feature | What it provides |
 | --- | --- |
@@ -27,13 +41,17 @@ The component outputs cluster centroids, bounds, velocity, orientation helpers, 
 | Presets | Save and load reusable component settings as JSON files. |
 | Diagnostics | Monitor status, cook time, point counts, cluster counts, and dropped-cluster metrics. |
 
-## Basic Workflow
+## Output Map
 
-1. Add one or more depth point-cloud sources on the `Sources` page. Kinect and Orbbec sources are currently supported.
-2. Align sources with per-source transform controls and the global transform.
-3. Set the scene size and masks so only the capture volume remains.
-4. Tune point-cloud cleanup, clustering, and cluster ID assignment until one person creates one stable slot.
-5. Save settings from the `Presets` page.
+| Output | Use it when you need |
+| --- | --- |
+| `raw` | Full slot state, IDs, pulses, positions, velocity, head, bounds, and OBB angle. |
+| `centroid` | Stable person positions for interaction zones, instancing, or logic. |
+| `bbox` | Bounds for debug overlays, volumes, or visual effects. |
+| `velocity` | Motion direction and speed. |
+| `orientation` | Direction helpers derived from movement. |
+| `point_cloud` | A prepared point-cloud view with source and cluster ID attributes. |
+| `info` | Runtime diagnostics, status, counts, and performance signals. |
 
 ## Guide Pages
 
@@ -42,3 +60,4 @@ The component outputs cluster centroids, bounds, velocity, orientation helpers, 
 | [Outputs](/outputs) | Slot conventions, connector outputs, raw channels, info channels, and status codes. |
 | [Parameters](/parameters) | Every wrapper parameter page and control exposed by Cumulus. |
 | [Tuning](/tuning) | Practical setup, clustering, ID stability, and 1 Euro filtering guidance. |
+| [Troubleshooting](/troubleshooting) | Fast fixes for common setup, clustering, tracking, and output problems. |

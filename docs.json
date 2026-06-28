@@ -1,10 +1,10 @@
 {
   "$schema": "https://docs.page/schema.json",
-  "name": "Cumulus: real-time pointcloud clustering and body tracking",
-  "description": "TouchDesigner depth-camera people clustering component documentation.",
+  "name": "Cumulus",
+  "description": "TouchDesigner depth-camera people clustering and tracking docs.",
   "theme": {
-    "primary": "#00A6A6",
-    "primaryLight": "#007C89"
+    "primary": "#008C95",
+    "primaryLight": "#10B8A6"
   },
   "content": {
     "showPageTitle": true,
@@ -41,6 +41,11 @@
           "title": "Tuning",
           "href": "/tuning",
           "icon": "gauge-high"
+        },
+        {
+          "title": "Troubleshooting",
+          "href": "/troubleshooting",
+          "icon": "circle-question"
         }
       ]
     }
