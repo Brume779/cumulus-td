@@ -1,15 +1,23 @@
 ---
 title: Cumulus User Guide
-description: Real-time 3D clustering for TouchDesigner
+description: Cumulus turns one or more depth-camera point clouds into stable people clusters with persistent IDs.
 ---
 
 This guide describes `Cumulus`, a TouchDesigner `.tox` component for turning one or more depth-camera point clouds into stable, person-sized clusters with persistent cluster IDs.
 
 ## General Purpose
 
-Cumulus is meant for interactive installations, stage systems, spatial interfaces, and other TouchDesigner projects that need reliable real-time people positions from depth cameras. It combines source setup, camera alignment, scene cropping, masking, point-cloud cleanup, clustering, ID persistence, smoothing, simulation, and reusable presets in one component.
+Cumulus is meant for interactive installations, stage systems, spatial interfaces, and other TouchDesigner projects that need reliable real-time people positions from depth cameras.
 
-The component outputs cluster centroids, bounds, velocity, orientation helpers, optional head positions, a prepared point-cloud view with per-point source and cluster ID attributes, and diagnostic info channels. Downstream networks can use these outputs for visuals, interaction zones, motion logic, analytics, or debugging.
+It combines the core tracking workflow in one component:
+
+- source setup and camera alignment
+- scene cropping and mask volumes
+- point-cloud cleanup
+- real-time clustering and persistent IDs
+- smoothing, simulation, diagnostics, and reusable presets
+
+The component outputs cluster centroids, bounds, velocity, orientation helpers, optional head positions, a prepared point-cloud view, and diagnostic info channels. Downstream networks can use these outputs for visuals, interaction zones, motion logic, analytics, or debugging.
 
 ## Main Features
 
