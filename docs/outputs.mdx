@@ -7,6 +7,8 @@ description: Connector outputs, slot state values, raw CHOP channels, and public
 
 Clusters are emitted as fixed slots. Empty slots stay present and use `_id = -1` and `_state = -1`.
 
+State values:
+
 | Value | Meaning |
 | --- | --- |
 | `-1` | Empty slot |
@@ -40,14 +42,6 @@ The `point_cloud` POP preserves the prepared points used for visualization and d
 ## Raw CHOP Channels
 
 `raw` has `Slots * 21` channels and one sample. Channels are named `cluster{N}_{suffix}`, where `N` starts at `0`.
-
-```text
-cluster0_id
-cluster0_state
-cluster0_cx
-...
-cluster1_id
-```
 
 | Suffix | Meaning |
 | --- | --- |
