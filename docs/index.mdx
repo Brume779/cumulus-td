@@ -11,6 +11,12 @@ Cumulus is meant for interactive installations, stage systems, spatial interface
 
 The component outputs cluster centroids, bounds, velocity, orientation helpers, optional head positions, a prepared point-cloud view with per-point source and cluster ID attributes, and diagnostic info channels. Downstream networks can use these outputs for visuals, interaction zones, motion logic, analytics, or debugging.
 
+## Native Plugin Note
+
+The Windows `.tox` embeds a native TouchDesigner C++ CHOP plugin, `Clustering.dll`, so the component can run without a separate plugin folder. TouchDesigner loads this DLL when the component opens or when the clustering C++ CHOP refreshes. Antivirus and IT security tools may scan or block native DLL loading at that time even if the `.tox` file itself scans clean.
+
+If you are installing Cumulus on a managed or production machine, let the local IT/security team know that the `.tox` contains a native Windows DLL. For allowlisting or verification, use the exact DLL build supplied with the release and its SHA-256 hash.
+
 ## Main Features
 
 | Feature | What it provides |
