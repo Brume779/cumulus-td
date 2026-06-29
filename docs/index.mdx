@@ -1,6 +1,6 @@
 ---
 title: Cumulus User Guide
-description: Real-time 3D clustering for TouchDesigner
+description: Cumulus turns one or more depth-camera point clouds into stable people clusters with persistent IDs.
 ---
 
 This guide describes `Cumulus`, a TouchDesigner `.tox` component for turning one or more depth-camera point clouds into stable, person-sized clusters with persistent cluster IDs.
@@ -18,7 +18,7 @@ The component outputs cluster centroids, bounds, velocity, orientation helpers, 
 | Multi-source depth input | Use several Kinect or Orbbec-style point-cloud sources and align them into one shared space. |
 | Per-source calibration controls | Adjust translation, rotation, scale, pivot, color, active state, binning, and time delay per source. |
 | Global scene controls | Crop the overall capture volume and switch between setup/calibration views. |
-| Mask volumes | Add repeated include/exclude mask blocks for precise cleanup after the broad scene crop. |
+| Mask volumes | Add repeated include/exclude mask blocks, including optional POP geometry masks, for precise cleanup after the broad scene crop. |
 | Point-cloud cleanup | Reduce density and remove local noise before clustering. |
 | Real-time clustering | Convert raw XYZ points into person-sized cluster slots with centroid, velocity, bounds, head, and OBB data. |
 | Persistent cluster IDs | Keep cluster IDs stable through motion, short occlusions, validation delays, and ghost hold time. |

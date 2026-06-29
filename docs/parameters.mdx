@@ -75,6 +75,8 @@ Use masks for precise include/exclude volumes after the broad scene crop.
 
 There is always at least one mask. The first mask should usually be an include box that is slightly smaller than the global scene box, about 10-30 cm inset on the edges that need cleanup. This removes noisy wall, floor, and foot-level points while keeping the broad scene size aligned to the room.
 
+Set Bounding Type to `POP` when a mask should use POP geometry as its collision shape. The collision POP must be a closed surface; open geometry can give unreliable inside/outside results.
+
 Mask Count controls how many mask blocks appear. The mask block controls repeat once for each mask volume.
 
 | Label | How to use it |
@@ -86,7 +88,7 @@ Mask block controls:
 | Label | How to use it |
 | --- | --- |
 | Enabled | Enables this mask block. |
-| Bounding Type | Shape/type of bound used by this mask block. Box bounds are the common default. |
+| Bounding Type | Shape/type of bound used by this mask block. Box bounds are the common default. Use `POP` for a closed POP collision surface. |
 | Combine | How this mask combines with previous masks. |
 | Translate | XYZ position of this mask. |
 | Rotate | XYZ rotation of this mask in degrees. |

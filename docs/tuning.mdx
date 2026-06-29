@@ -9,7 +9,7 @@ Tune in this order: sources, scene crop, masks, point-cloud cleanup, clustering,
 
 If clusters appear in the wrong place, fix source Translation, Rotation, Scale, and Pivot before touching clustering controls. Your scene and global sources transform should reflect your physical world. Multiple cameras should agree on the same floor, wall, and body positions before their clouds are merged.
 
-If extra background objects become clusters, first make sure Max Bounds correctly describes the global room/tracking volume size from `0, 0, 0`, then use the first local mask as a slightly smaller include box, usually about 10-30 cm inside the global scene box where wall, floor, or foot noise appears. Add more local mask blocks for furniture or other fixed geometry inside that volume. Use View Outside during setup to confirm whether unwanted points are outside the global scene box or still inside the active volume.
+If extra background objects become clusters, first make sure Max Bounds correctly describes the global room/tracking volume size from `0, 0, 0`, then use the first local mask as a slightly smaller include box, usually about 10-30 cm inside the global scene box where wall, floor, or foot noise appears. Add more local mask blocks for furniture or other fixed geometry inside that volume. Use `POP` masks for irregular geometry only when the collision POP is a closed surface. Use View Outside during setup to confirm whether unwanted points are outside the global scene box or still inside the active volume.
 
 If one camera is noisy or offset, disable that source with Active and tune with a single source first. Re-enable sources one at a time so you can see which camera creates the problem.
 
